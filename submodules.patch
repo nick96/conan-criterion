@@ -14,17 +14,25 @@
  )
  
  if (THEORIES)
---- source_subfolder/CMakeLists.txt	2018-06-07 17:31:49.818768109 +0200
-+++ source_subfolder/CMakeLists.txt.patched	2018-06-07 17:32:58.802426241 +0200
+--- source_subfolder/CMakeLists.txt	2018-06-12 10:16:31.567876778 +0200
++++ source_subfolder/CMakeLists.txt.patched	2018-06-12 10:18:51.502566023 +0200
 @@ -18,7 +18,6 @@
  # Initialization
- 
+
  include (Options)
 -include (Submodules)
  include (Capabilities)
  include (Subprojects)
  include (PackageUtils)
-@@ -155,6 +154,10 @@
+@@ -35,6 +34,7 @@
+ find_package(Dyncall)
+ find_package(Nanomsg)
+ find_package(BoxFort)
++find_package(Nanopb)
+
+ cr_add_subproject (csptr
+   GIT "https://github.com/Snaipe/libcsptr#0d52904"
+@@ -155,6 +155,10 @@
    include_directories("${BOXFORT_INCLUDE_DIRS}")
    cr_link_libraries(criterion "${BOXFORT_LIBRARIES}" IF BOXFORT_FOUND)
  endif ()
@@ -32,6 +40,6 @@
 +  include_directories("${NANOPB_INCLUDE_DIRS}")
 +  cr_link_libraries(criterion "${NANOPB_LIBRARIES}" IF NANOPB_FOUND)
 +endif ()
- 
+
  cr_link_libraries(criterion pthread IF NOT WIN32)
  cr_link_libraries(criterion rt IF HAVE_LIBRT)
