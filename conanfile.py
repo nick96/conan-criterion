@@ -30,7 +30,7 @@ class CriterionConan(ConanFile):
         'nanomsg/1.1.2@bincrafters/stable',
         'libcsptr/2.0.4@k0ekk0ek/stable',
         'dyncall/1.0@k0ekk0ek/stable',
-        'boxfort/05312018@k0ekk0ek/stable',
+        'boxfort/05112018@k0ekk0ek/stable',
         'nanopb/0.3.9.1@k0ekk0ek/stable',
         'debugbreak/16072017@k0ekk0ek/stable'
     )
