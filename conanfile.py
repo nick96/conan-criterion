@@ -21,8 +21,8 @@ class CriterionConan(ConanFile):
         "fPIC": [True, False]
     }
     default_options = (
-        "fPIC=True",
-        'nanomsg:shared=True'
+        "fPIC=True"
+#       'nanomsg:shared=True'
     )
     source_subfolder = "source_subfolder"
     build_subfolder = "build_subfolder"
