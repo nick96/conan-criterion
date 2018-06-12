@@ -28,7 +28,7 @@ class CriterionConan(ConanFile):
     build_subfolder = "build_subfolder"
 
     requires = (
-        'nanomsg/1.1.2@bincrafters/stable',
+        'nanomsg/1.1.2@k0ekk0ek/stable',
         'libcsptr/2.0.4@k0ekk0ek/stable',
         'dyncall/1.0@k0ekk0ek/stable',
         'boxfort/05112018@k0ekk0ek/stable',
