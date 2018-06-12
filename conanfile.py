@@ -3,6 +3,7 @@
 
 from conans import ConanFile, CMake, tools
 import os
+import shutil
 
 
 class CriterionConan(ConanFile):
@@ -13,7 +14,7 @@ class CriterionConan(ConanFile):
     homepage = "https://github.com/Snaipe/Criterion"
     license = "MIT"
     exports = ["LICENSE.md"]
-    exports_sources = ["CMakeLists.txt", 'submodules.patch', 'boxfort.patch']
+    exports_sources = ['CMakeLists.txt', 'FindNanopb.cmake', 'submodules.patch', 'boxfort.patch']
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {
@@ -51,6 +52,8 @@ class CriterionConan(ConanFile):
         # sources required should simply be copied into the project.
         self.run('git -C {0} submodule update --init --remote -- dependencies/klib'
             .format(self.source_subfolder))
+        # Copy Nanopb find_package module into place.
+        shutil.copy('FindNanopb.cmake', '{0}/.cmake/Modules'.format(self.source_subfolder))
 
     def configure_cmake(self):
         # Most submodules will be provided by Conan instead.
