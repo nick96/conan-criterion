@@ -22,13 +22,15 @@ class CriterionConan(ConanFile):
     }
     default_options = (
         "fPIC=True"
-#       'nanomsg:shared=True'
     )
     source_subfolder = "source_subfolder"
     build_subfolder = "build_subfolder"
 
     requires = (
         'nanomsg/1.1.2@k0ekk0ek/stable',
+        # FIXME: Should be handled in the same way as Klib as only smalloc is
+        #        used by Criterion and libcsptr is probably not worth being
+        #        maintained as a separate package.
         'libcsptr/2.0.4@k0ekk0ek/stable',
         'dyncall/1.0@k0ekk0ek/stable',
         'boxfort/05112018@k0ekk0ek/stable',
