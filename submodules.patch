@@ -43,3 +43,14 @@
 
  cr_link_libraries(criterion pthread IF NOT WIN32)
  cr_link_libraries(criterion rt IF HAVE_LIBRT)
+--- source_subfolder/.cmake/Modules/FindNanomsg.cmake	2018-06-13 14:19:16.161838438 +0200
++++ source_subfolder/.cmake/Modules/FindNanomsg.cmake.patched	2018-06-13 14:19:52.277136970 +0200
+@@ -21,7 +21,7 @@
+ 
+ # Copy the results to the output variables.
+ IF(NANOMSG_FOUND)
+-  SET(NANOMSG_LIBRARIES ${NANOMSG_LIBRARY})
++  SET(NANOMSG_LIBRARIES ${NANOMSG_LIBRARY} ${CONAN_LIBS_NANOMSG})
+   SET(NANOMSG_INCLUDE_DIRS ${NANOMSG_INCLUDE_DIR})
+ ELSE(NANOMSG_FOUND)
+   SET(NANOMSG_LIBRARIES)
