@@ -14,35 +14,6 @@
  )
  
  if (THEORIES)
---- source_subfolder/CMakeLists.txt	2018-06-12 10:16:31.567876778 +0200
-+++ source_subfolder/CMakeLists.txt.patched	2018-06-12 10:18:51.502566023 +0200
-@@ -18,7 +18,6 @@
- # Initialization
-
- include (Options)
--include (Submodules)
- include (Capabilities)
- include (Subprojects)
- include (PackageUtils)
-@@ -35,6 +34,7 @@
- find_package(Dyncall)
- find_package(Nanomsg)
- find_package(BoxFort)
-+find_package(Nanopb)
-
- cr_add_subproject (csptr
-   GIT "https://github.com/Snaipe/libcsptr#0d52904"
-@@ -155,6 +155,10 @@
-   include_directories("${BOXFORT_INCLUDE_DIRS}")
-   cr_link_libraries(criterion "${BOXFORT_LIBRARIES}" IF BOXFORT_FOUND)
- endif ()
-+if (NANOPB_FOUND)
-+  include_directories("${NANOPB_INCLUDE_DIRS}")
-+  cr_link_libraries(criterion "${NANOPB_LIBRARIES}" IF NANOPB_FOUND)
-+endif ()
-
- cr_link_libraries(criterion pthread IF NOT WIN32)
- cr_link_libraries(criterion rt IF HAVE_LIBRT)
 --- source_subfolder/.cmake/Modules/FindNanomsg.cmake	2018-06-13 14:19:16.161838438 +0200
 +++ source_subfolder/.cmake/Modules/FindNanomsg.cmake.patched	2018-06-13 14:19:52.277136970 +0200
 @@ -21,7 +21,7 @@
@@ -54,3 +25,62 @@
    SET(NANOMSG_INCLUDE_DIRS ${NANOMSG_INCLUDE_DIR})
  ELSE(NANOMSG_FOUND)
    SET(NANOMSG_LIBRARIES)
+--- source_subfolder/CMakeLists.txt	2018-06-14 09:34:19.484675636 +0200
++++ source_subfolder/CMakeLists.txt.patched	2018-06-14 09:33:22.042212756 +0200
+@@ -18,7 +18,6 @@
+ # Initialization
+ 
+ include (Options)
+-include (Submodules)
+ include (Capabilities)
+ include (Subprojects)
+ include (PackageUtils)
+@@ -35,6 +34,10 @@
+ find_package(Dyncall)
+ find_package(Nanomsg)
+ find_package(BoxFort)
++find_package(Nanopb)
++if(MSVC)
++  find_package(Wingetopt)
++endif(MSVC)
+ 
+ cr_add_subproject (csptr
+   GIT "https://github.com/Snaipe/libcsptr#0d52904"
+@@ -84,13 +87,6 @@
+ 
+ add_definitions(-DBXF_STATIC_LIB -DNN_STATIC_LIB)
+ 
+-cr_add_subproject (wingetopt
+-  GIT "git://github.com/alex85k/wingetopt.git#76a5d1a"
+-  PATH dependencies/wingetopt
+-  CMAKE
+-  IF MSVC
+-)
+-
+ include (Properties)
+ 
+ if (NOT NANOMSG_FOUND OR NANOMSG_LIBRARIES MATCHES ".*\\.a")
+@@ -137,7 +133,7 @@
+ cr_link_subproject(criterion nanomsg STATIC IF NOT NANOMSG_FOUND)
+ cr_link_subproject(criterion dyncall_s STATIC IF NOT DYNCALL_FOUND)
+ cr_link_subproject(criterion boxfort STATIC IF NOT BOXFORT_FOUND)
+-cr_link_subproject(criterion wingetopt STATIC)
++cr_link_subproject(criterion wingetopt STATIC IF NOT WINGETOPT_FOUND)
+ 
+ if (CSPTR_FOUND)
+   include_directories("${CSPTR_INCLUDE_DIRS}")
+@@ -155,6 +151,14 @@
+   include_directories("${BOXFORT_INCLUDE_DIRS}")
+   cr_link_libraries(criterion "${BOXFORT_LIBRARIES}" IF BOXFORT_FOUND)
+ endif ()
++if (NANOPB_FOUND)
++  include_directories("${NANOPB_INCLUDE_DIRS}")
++  cr_link_libraries(criterion "${NANOPB_LIBRARIES}" IF NANOPB_FOUND)
++endif ()
++if (WINGETOPT_FOUND)
++  include_directories("${WINGETOPT_INCLUDE_DIRS}")
++  cr_link_libraries(criterion "${WINGETOPT_LIBRARIES}" IF NANOPB_FOUND)
++endif ()
+ 
+ cr_link_libraries(criterion pthread IF NOT WIN32)
+ cr_link_libraries(criterion rt IF HAVE_LIBRT)

@@ -14,7 +14,7 @@ class CriterionConan(ConanFile):
     homepage = "https://github.com/Snaipe/Criterion"
     license = "MIT"
     exports = ["LICENSE.md"]
-    exports_sources = ['CMakeLists.txt', 'FindNanopb.cmake', 'submodules.patch', 'boxfort.patch']
+    exports_sources = ['CMakeLists.txt', 'FindNanopb.cmake', 'FindWingetopt.cmake', 'submodules.patch', 'boxfort.patch']
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {
@@ -45,6 +45,10 @@ class CriterionConan(ConanFile):
         if self.settings.os == 'Windows':
             del self.options.fPIC
 
+    def requirements(self):
+        if self.settings.os == 'Windows':
+            self.requires('wingetopt/0.95@k0ekk0ek/stable')
+
     def source(self):
         self.run('git clone --branch={0} {1}.git {2}'
             .format(self.branch, self.homepage, self.source_subfolder))
@@ -54,8 +58,9 @@ class CriterionConan(ConanFile):
         # sources required should simply be copied into the project.
         self.run('git -C {0} submodule update --init --remote -- dependencies/klib'
             .format(self.source_subfolder))
-        # Copy Nanopb find_package module into place.
+        # Copy find_package modules into place.
         shutil.copy('FindNanopb.cmake', '{0}/.cmake/Modules'.format(self.source_subfolder))
+        shutil.copy('FindWingetopt.cmake', '{0}/.cmake/Modules'.format(self.source_subfolder))
 
     def configure_cmake(self):
         # Most submodules will be provided by Conan instead.
