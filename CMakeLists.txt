@@ -4,6 +4,6 @@ project(cmake_wrapper)
 include(conanbuildinfo.cmake)
 conan_basic_setup()
 
-message(STATUS "CONAN_SETTINGS_ARCH: ${CONAN_SETTINGS_ARCH}")
+set(CMAKE_SYSTEM_PROCESSOR ${CONAN_SETTINGS_ARCH})
 
 add_subdirectory("source_subfolder")
