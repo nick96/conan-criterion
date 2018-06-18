@@ -3,6 +3,7 @@
 
 from conans import ConanFile, CMake, tools
 import os
+import shutil
 
 
 class CriterionConan(ConanFile):
@@ -13,7 +14,7 @@ class CriterionConan(ConanFile):
     homepage = "https://github.com/Snaipe/Criterion"
     license = "MIT"
     exports = ["LICENSE.md"]
-    exports_sources = ['CMakeLists.txt']
+    exports_sources = ['CMakeLists.txt', 'FindNanopb.cmake', 'FindWingetopt.cmake', 'submodules.patch', 'boxfort.patch']
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {
@@ -25,6 +26,18 @@ class CriterionConan(ConanFile):
     source_subfolder = "source_subfolder"
     build_subfolder = "build_subfolder"
 
+    requires = (
+        'nanomsg/1.1.2@k0ekk0ek/stable',
+        # FIXME: Should be handled in the same way as Klib as only smalloc is
+        #        used by Criterion and libcsptr is probably not worth being
+        #        maintained as a separate package.
+        'libcsptr/2.0.4@k0ekk0ek/stable',
+        'dyncall/1.0@k0ekk0ek/stable',
+        'boxfort/05112018@k0ekk0ek/stable',
+        'nanopb/0.3.9.1@k0ekk0ek/stable',
+        'debugbreak/16072017@k0ekk0ek/stable'
+    )
+
     branch = "master"
     commit = "514b4d820e2f8fb4daa2b95b69c981853656cb73" # Version 2.3.2
 
@@ -32,11 +45,27 @@ class CriterionConan(ConanFile):
         if self.settings.os == 'Windows':
             del self.options.fPIC
 
+    def requirements(self):
+        if self.settings.os == 'Windows':
+            self.requires('wingetopt/0.95@k0ekk0ek/stable')
+
     def source(self):
         self.run('git clone --branch={0} {1}.git {2}'
             .format(self.branch, self.homepage, self.source_subfolder))
+        self.run('git -C {0} checkout {1}'
+            .format(self.source_subfolder, self.commit))
+        # Klib is not meant to be used as a conventional library. Instead the
+        # sources required should simply be copied into the project.
+        self.run('git -C {0} submodule update --init --remote -- dependencies/klib'
+            .format(self.source_subfolder))
+        # Copy find_package modules into place.
+        shutil.copy('FindNanopb.cmake', '{0}/.cmake/Modules'.format(self.source_subfolder))
+        shutil.copy('FindWingetopt.cmake', '{0}/.cmake/Modules'.format(self.source_subfolder))
 
     def configure_cmake(self):
+        # Most submodules will be provided by Conan instead.
+        tools.patch(patch_file='submodules.patch')
+
         cmake = CMake(self)
         if self.settings.os != 'Windows':
             cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
@@ -44,6 +73,9 @@ class CriterionConan(ConanFile):
         return cmake
 
     def build(self):
+        # Newer versions of BoxFort have bxf_spawn_params_s.
+        tools.patch(patch_file='boxfort.patch')
+
         cmake = self.configure_cmake()
         cmake.build()
 
