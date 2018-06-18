@@ -14,7 +14,7 @@ class CriterionConan(ConanFile):
     homepage = "https://github.com/Snaipe/Criterion"
     license = "MIT"
     exports = ["LICENSE.md"]
-    exports_sources = ['CMakeLists.txt', 'FindNanopb.cmake', 'FindWingetopt.cmake', 'submodules.patch', 'boxfort.patch']
+    exports_sources = ['CMakeLists.txt', 'submodules.patch', 'boxfort.patch']
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {
@@ -27,15 +27,13 @@ class CriterionConan(ConanFile):
     build_subfolder = "build_subfolder"
 
     requires = (
-        'nanomsg/1.1.2@k0ekk0ek/stable',
+        'nanomsg/06252016@k0ekk0ek/stable',
         # FIXME: Should be handled in the same way as Klib as only smalloc is
         #        used by Criterion and libcsptr is probably not worth being
         #        maintained as a separate package.
         'libcsptr/2.0.4@k0ekk0ek/stable',
-        'dyncall/1.0@k0ekk0ek/stable',
-        'boxfort/05112018@k0ekk0ek/stable',
-        'nanopb/0.3.9.1@k0ekk0ek/stable',
-        'debugbreak/16072017@k0ekk0ek/stable'
+        'dyncall/09132016@k0ekk0ek/stable',
+        'boxfort/12122016@k0ekk0ek/stable'
     )
 
     branch = "master"
@@ -58,9 +56,6 @@ class CriterionConan(ConanFile):
         # sources required should simply be copied into the project.
         self.run('git -C {0} submodule update --init --remote -- dependencies/klib'
             .format(self.source_subfolder))
-        # Copy find_package modules into place.
-        shutil.copy('FindNanopb.cmake', '{0}/.cmake/Modules'.format(self.source_subfolder))
-        shutil.copy('FindWingetopt.cmake', '{0}/.cmake/Modules'.format(self.source_subfolder))
 
     def configure_cmake(self):
         # Most submodules will be provided by Conan instead.
@@ -73,9 +68,6 @@ class CriterionConan(ConanFile):
         return cmake
 
     def build(self):
-        # Newer versions of BoxFort have bxf_spawn_params_s.
-        tools.patch(patch_file='boxfort.patch')
-
         cmake = self.configure_cmake()
         cmake.build()
 
