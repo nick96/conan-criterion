@@ -14,7 +14,7 @@ class CriterionConan(ConanFile):
     homepage = "https://github.com/Snaipe/Criterion"
     license = "MIT"
     exports = ["LICENSE.md"]
-    exports_sources = ['CMakeLists.txt', 'submodules.patch', 'boxfort.patch']
+    exports_sources = ['CMakeLists.txt', 'submodules.patch', 'FindWingetopt.cmake']
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {
@@ -33,7 +33,8 @@ class CriterionConan(ConanFile):
         #        maintained as a separate package.
         'libcsptr/2.0.4@k0ekk0ek/stable',
         'dyncall/09132016@k0ekk0ek/stable',
-        'boxfort/12122016@k0ekk0ek/stable'
+        'boxfort/12122016@k0ekk0ek/stable',
+        'wingetopt/0.95@k0ekk0ek/stable'
     )
 
     branch = "master"
@@ -54,8 +55,9 @@ class CriterionConan(ConanFile):
             .format(self.source_subfolder, self.commit))
         # Klib is not meant to be used as a conventional library. Instead the
         # sources required should simply be copied into the project.
-        self.run('git -C {0} submodule update --init --remote -- dependencies/klib'
-            .format(self.source_subfolder))
+        #self.run('git -C {0} submodule update --init --remote -- dependencies/klib'
+        #    .format(self.source_subfolder))
+        shutil.copy('FindWingetopt.cmake', '{0}/.cmake/Modules'.format(self.source_subfolder))
 
     def configure_cmake(self):
         # Most submodules will be provided by Conan instead.
