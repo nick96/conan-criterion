@@ -33,8 +33,7 @@ class CriterionConan(ConanFile):
         #        maintained as a separate package.
         'libcsptr/2.0.4@k0ekk0ek/stable',
         'dyncall/09132016@k0ekk0ek/stable',
-        'boxfort/12122016@k0ekk0ek/stable',
-        'wingetopt/0.95@k0ekk0ek/stable'
+        'boxfort/12122016@k0ekk0ek/stable'
     )
 
     branch = "master"
