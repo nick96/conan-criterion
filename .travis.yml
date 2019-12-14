@@ -3,8 +3,9 @@ matrix:
     - os: linux
       language: python
       cache: pip
-      env:
-        CONAN_GCC_VERSION=7
+      env: CONAN_GCC_VERSION=7 CONAN_DOCKER_IMAGE=lasote/conangcc7
+      services:
+        - docker
 
     - os: windows
       language: minimal
