@@ -3,23 +3,16 @@
 set -e
 set -x
 
-if [[ "$(uname -s)" == 'Darwin' ]]; then
-    brew update || brew update
-    brew outdated pyenv || brew upgrade pyenv
-    brew install pyenv-virtualenv
-    brew install cmake || true
-
-    if which pyenv > /dev/null; then
-        eval "$(pyenv init -)"
-    fi
-
-    pyenv install 2.7.10
-    pyenv virtualenv 2.7.10 conan
-    pyenv rehash
-    pyenv activate conan
+if [[ "TRAVIS_OS_NAME" == "windows" ]]
+then
+    choco install python --version 3.8
+    export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
+    pip3 install conan
+    pip3 install conan_package_tools bincrafters_package_tools
+else
+    pip install conan --upgrade
+    pip install conan_package_tools bincrafters_package_tools
 fi
 
-pip install conan --upgrade
-pip install conan_package_tools bincrafters_package_tools
 
 conan user
