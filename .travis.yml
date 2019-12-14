@@ -1,7 +1,7 @@
 matrix:
    include:
-     - os: linux
-       language: python
+    - os: linux
+      language: python
 
     - os: windows
       language: minimal
