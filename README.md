@@ -1,9 +1,5 @@
 ## Package Status
 
-| Bintray | Windows | Linux & macOS |
-|:--------:|:---------:|:-----------------:|
-|BINTRAY_BADGE_URL|APPVEYOR_BADGE_URL|TRAVIS_BADGE_URL|
-
 ## Conan.io Information
 
 Bincrafters packages can be found in the following public Conan repository:
