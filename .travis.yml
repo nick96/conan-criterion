@@ -3,6 +3,8 @@ matrix:
     - os: linux
       language: python
       cache: pip
+      env:
+        CONAN_GCC_VERSION=7
 
     - os: windows
       language: minimal
