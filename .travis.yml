@@ -2,12 +2,14 @@ matrix:
    include:
     - os: linux
       language: python
+      cache: pip
 
     - os: windows
       language: minimal
       before_install:
         - choco install python --version 3.8
         - export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
+      cache: pip
 
 
 install:
